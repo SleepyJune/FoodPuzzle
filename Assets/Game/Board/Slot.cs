@@ -7,16 +7,31 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
+using UnityEngine.EventSystems;
+
 namespace Assets.Game.Board
 {
-    public class Slot : MonoBehaviour
+    public class Slot : MonoBehaviour, IDropHandler
     {
         [NonSerialized]
         public Vector2Int position;
 
-        [NonSerialized]
-        public FoodObject foodObject;
+        Tile tile;
 
-        public Image icon;
+        public void OnDrop(PointerEventData eventData)
+        {
+            if (eventData.pointerDrag != null)
+            {
+                Tile tile = eventData.pointerDrag.GetComponent<Tile>();
+                if (tile != null)
+                {
+                    SetSlot(tile);
+                }
+            }
+        }
+        void SetSlot(Tile tile)
+        {
+            this.tile = tile;
+        }
     }
 }

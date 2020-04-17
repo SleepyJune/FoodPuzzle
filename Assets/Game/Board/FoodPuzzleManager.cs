@@ -9,10 +9,5 @@ using UnityEngine;
 using Assets.Game.Board;
 public class FoodPuzzleManager : MonoBehaviour
 {
-    public FoodSlotGroup GenerateRandomSlotGroup()
-    {
 
-
-        return null;
-    }
 }

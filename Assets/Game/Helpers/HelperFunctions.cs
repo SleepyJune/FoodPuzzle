@@ -25,6 +25,13 @@ public static class MyExtensions
         }
     }
 
+    public static T GenerateRandomElement<T>(this List<T> list)
+    {
+        var index = UnityEngine.Random.Range(0, list.Count);
+
+        return list[index];
+    }
+
     public static Vector2 ToRectPos(this Vector3 worldPos, RectTransform parentRect)
     {
         return ((Vector2)worldPos).ToRectPos(parentRect);

@@ -103,7 +103,7 @@ namespace Assets.Game.PuzzleGroupEditor
             
             File.WriteAllText(path + newTemplate.name + ".json", jsonData);
 
-
+            AssetDatabase.Refresh();
         }
 
         public void Load(TileGroupTemplate template)

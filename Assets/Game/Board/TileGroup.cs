@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using UnityEngine;
+using UnityEngine.EventSystems;
+
 namespace Assets.Game.Board
 {
-    public class FoodSlotGroup
+    public class TileGroup : MonoBehaviour
     {
-        [NonSerialized]
-        List<Slot> slots = new List<Slot>();
     }
 }
