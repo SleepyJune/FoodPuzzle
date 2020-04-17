@@ -12,7 +12,7 @@ namespace Assets.Game.Board
     public class Slot : MonoBehaviour
     {
         [NonSerialized]
-        public Vector2 position;
+        public Vector2Int position;
 
         [NonSerialized]
         public FoodObject foodObject;

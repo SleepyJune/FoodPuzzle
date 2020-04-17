@@ -41,7 +41,7 @@ namespace Assets.Game.Board
                 for(int x = 0;x < boardWidth; x++)
                 {
                     var newSlot = Instantiate(slotPrefab, slotParent);
-                    newSlot.position = new Vector2(x, y);
+                    newSlot.position = new Vector2Int(x, y);
 
                     slots.Add(newSlot.position, newSlot);
                 }

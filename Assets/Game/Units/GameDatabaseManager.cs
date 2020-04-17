@@ -6,6 +6,8 @@ using UnityEngine;
 
 using System.Linq;
 
+using Assets.Game.Units.TileGroup;
+
 public class GameDatabaseManager : MonoBehaviour
 {
     public GameDatabase database;
@@ -15,6 +17,8 @@ public class GameDatabaseManager : MonoBehaviour
 
     public Dictionary<int, FoodObject> foodObjects = new Dictionary<int, FoodObject>();
     public Dictionary<int, FoodRecipeObject> recipeObjects = new Dictionary<int, FoodRecipeObject>();
+
+    public Dictionary<int, TileGroupTemplate> tileGroupTemplates = new Dictionary<int, TileGroupTemplate>();
 
     private void Awake()
     {
@@ -47,6 +51,11 @@ public class GameDatabaseManager : MonoBehaviour
             if (obj is FoodRecipeObject)
             {
                 recipeObjects.Add(obj.id, obj as FoodRecipeObject);
+            }
+
+            if (obj is TileGroupTemplate)
+            {
+                tileGroupTemplates.Add(obj.id, obj as TileGroupTemplate);
             }
 
             allObjects.Add(obj.id, obj);
