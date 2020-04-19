@@ -27,6 +27,7 @@ public class GameDatabaseManager : MonoBehaviour
 
         if(GameManager.instance != null)
         {
+            //done initializing, call the rest managers
             GameManager.instance.Initialize();
         }
     }

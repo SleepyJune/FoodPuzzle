@@ -20,7 +20,7 @@ namespace Assets.Game.Board
         public int boardHeight = 6;
 
         [NonSerialized]
-        public Dictionary<Vector2, Slot> slots;
+        public Dictionary<Vector2Int, Slot> slots;
 
         void Start()
         {
@@ -34,9 +34,9 @@ namespace Assets.Game.Board
             
             slotParentGridLayoutGroup.constraintCount = boardWidth;
 
-            slots = new Dictionary<Vector2, Slot>();
+            slots = new Dictionary<Vector2Int, Slot>();
 
-            for (int y = 0; y < boardHeight; y++)
+            for (int y = boardHeight - 1; y >= 0; y--)
             {
                 for(int x = 0;x < boardWidth; x++)
                 {
@@ -47,5 +47,30 @@ namespace Assets.Game.Board
                 }
             }
         }
+
+        public Slot GetSlot(Vector2Int pos)
+        {
+            Slot slot;
+            if(slots.TryGetValue(pos, out slot))
+            {
+                return slot;
+            }
+
+            return null;
+        }
+
+        public Slot GetSlot(Slot slot, Vector2Int displacement)
+        {
+            if(slot != null)
+            {
+                var pos = slot.position + displacement;
+
+                return GetSlot(pos);
+            }
+
+            return null;
+        }
+
+
     }
 }
