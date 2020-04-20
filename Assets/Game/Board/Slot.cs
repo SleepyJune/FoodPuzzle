@@ -41,7 +41,7 @@ namespace Assets.Game.Board
         {
             var tile = GetDraggedTile(eventData);
 
-            GameManager.instance.tileGroupManager.SetGroup(tile, this);
+            GameManager.instance.tileGroupManager.SetGroupToSlot(tile, this);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -78,6 +78,16 @@ namespace Assets.Game.Board
         void SetSlot(Tile tile)
         {
             this.tile = tile;
+        }
+
+        public FoodObject GetFood()
+        {
+            if(tile != null)
+            {
+                return tile.foodObject;
+            }
+
+            return null;
         }
 
         public bool isEmpty()

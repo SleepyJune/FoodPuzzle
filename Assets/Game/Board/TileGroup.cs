@@ -15,6 +15,8 @@ namespace Assets.Game.Board
     {
         public List<Tile> tiles = new List<Tile>();
 
+        public Transform tileParent;
+
         CanvasGroup canvasGroup;
 
         Vector2 origin;
@@ -53,8 +55,10 @@ namespace Assets.Game.Board
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            //transform.localPosition = origin;
+            transform.localPosition = origin;
             canvasGroup.blocksRaycasts = true;
+
+            GameManager.instance.tileGroupManager.ResetSlotColors();
         }
     }
 }

@@ -39,32 +39,54 @@ namespace Assets.Game.Board
             {
                 templates.Add(template);
 
-                GenerateTileGroup(template);
+                //GenerateTileGroup(template);
             }
+
+            GenerateRandomTileGroup();
         }
 
-        public void SetGroup(Tile draggedTile, Slot pointerSlot)
+        public void SetGroupToSlot(Tile draggedTile, Slot pointerSlot)
         {
-            var tileGroup = draggedTile.parentGroup;
-
-            CheckTileGroupPositioning(draggedTile, pointerSlot);
-
-            foreach (var tile in tileGroup.tiles)
+            if (pointerSlot != null && draggedTile != null)
             {
-                if(tile.slot != null)
+                var tileGroup = draggedTile.parentGroup;
+
+                var canFit = CheckTileGroupPositioning(draggedTile, pointerSlot);
+
+                if (canFit)
                 {
-                    tile.slot.SetTile(tile);
+                    foreach (var tile in tileGroup.tiles)
+                    {
+                        if (tile.slot != null)
+                        {
+                            tile.slot.SetTile(tile);
+                        }
+                    }
+
+                    Destroy(tileGroup.gameObject);
+
+                    GenerateRandomTileGroup();
+                }
+                else
+                {
+                    //doesn't fit
                 }
             }
 
-            Destroy(tileGroup.gameObject);
+            ResetSlotColors();
         }
-        public bool CheckTileGroupPositioning(Tile draggedTile, Slot pointerSlot)
-        {            
-            foreach(var slot in boardManager.slots.Values)
+
+        public void ResetSlotColors()
+        {
+            foreach (var slot in boardManager.slots.Values)
             {
                 slot.background.color = Color.white;
             }
+        }
+
+        public bool CheckTileGroupPositioning(Tile draggedTile, Slot pointerSlot)
+        {
+            ResetSlotColors();
 
             var tileGroup = draggedTile.parentGroup;
 
@@ -81,8 +103,11 @@ namespace Assets.Game.Board
                 {
                     if (!slot.isEmpty())
                     {
-                        slot.background.color = Color.red;
-                        slot = null;
+                        if(slot.GetFood() != tile.foodObject)
+                        {
+                            slot.background.color = Color.red;
+                            slot = null;
+                        }                        
                     }
                 }
 
@@ -97,18 +122,32 @@ namespace Assets.Game.Board
             return canFitGroup;
         }
 
+        void GenerateRandomTileGroup()
+        {
+            var random = templates.GenerateRandomElement();
+
+            GenerateTileGroup(random);
+        }
+
         TileGroup GenerateTileGroup(TileGroupTemplate template)
         {           
             TileGroup newTileGroup = Instantiate(tileGroupPrefab, tileGroupParent);
 
             Dictionary<int, FoodObject> foodObjects = new Dictionary<int, FoodObject>();
 
+            float min_x = 9999, max_x = 0, min_y = 9999, max_y = 0;
+
             foreach(var slot in template.slots)
             {
-                var newTile = Instantiate(tilePrefab, newTileGroup.transform);
+                var newTile = Instantiate(tilePrefab, newTileGroup.tileParent);
                 newTile.transform.localPosition = new Vector2(slotSize * slot.pos.x, slotSize * slot.pos.y);
                 newTile.pos = slot.pos;
                 
+                min_x = Math.Min(min_x, newTile.transform.localPosition.x);
+                min_y = Math.Min(min_y, newTile.transform.localPosition.y);
+                max_x = Math.Max(max_x, newTile.transform.localPosition.x);
+                max_y = Math.Max(max_y, newTile.transform.localPosition.y);
+
                 newTileGroup.AddTile(newTile);
                 
                 int foodIndex = (int)slot.slotType - 2;
@@ -130,6 +169,11 @@ namespace Assets.Game.Board
 
                 newTile.SetFood(food);
             }
+
+            var tileParentDisp = new Vector2(-min_x - (max_x - min_x)/2f, -min_y - (max_y - min_y)/2f);
+
+            Debug.Log(tileParentDisp);
+            newTileGroup.tileParent.localPosition = tileParentDisp;
 
             return null;
         }
