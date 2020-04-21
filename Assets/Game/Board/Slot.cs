@@ -20,6 +20,11 @@ namespace Assets.Game.Board
 
         Tile tile;
 
+        public HashSet<Slot> neighbours = new HashSet<Slot>();
+
+        [NonSerialized]
+        public bool recentlyAdded = false;
+
         public void SetTile(Tile droppedTile)
         {
             if(tile != null)
@@ -34,6 +39,8 @@ namespace Assets.Game.Board
                 cloneTile.SetFood(droppedTile.foodObject);
 
                 this.tile = cloneTile;
+
+                recentlyAdded = true;
             }            
         }
 
@@ -88,6 +95,32 @@ namespace Assets.Game.Board
             }
 
             return null;
+        }
+
+        public bool isSameTileType(Slot other)
+        {
+            if(tile != null && other.tile != null)
+            {
+                if(tile.foodObject != null && tile.foodObject == other.tile.foodObject)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public Tile GetTile()
+        {
+            return tile;
+        }
+
+        public void DestroyTile()
+        {
+            if(tile != null)
+            {
+                Destroy(tile.gameObject);
+            }
         }
 
         public bool isEmpty()

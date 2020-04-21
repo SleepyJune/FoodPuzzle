@@ -20,11 +20,13 @@ namespace Assets.Game.Board
         const int slotSize = 140;
 
         BoardManager boardManager;
+        TileGroupMatcher tileGroupMatcher;
 
         List<TileGroupTemplate> templates = new List<TileGroupTemplate>();
         void Start()
         {
             boardManager = GameManager.instance.boardManager;
+            tileGroupMatcher = new TileGroupMatcher();
 
             Initialize();
         }
@@ -63,6 +65,8 @@ namespace Assets.Game.Board
                         }
                     }
 
+                    CheckMatch(tileGroup);
+
                     Destroy(tileGroup.gameObject);
 
                     GenerateRandomTileGroup();
@@ -74,6 +78,39 @@ namespace Assets.Game.Board
             }
 
             ResetSlotColors();
+        }
+
+        void CheckMatch(TileGroup tileGroup)
+        {
+            List<MatchedTileGroup> matches = new List<MatchedTileGroup>();
+
+            foreach (var tile in tileGroup.tiles)
+            {
+                if (tile.slot != null)
+                {
+                    var match = tileGroupMatcher.CheckMatch(tile.slot);
+                    if(match != null)
+                    {
+                        matches.Add(match);
+                    }
+                }
+            }
+
+            foreach (var tile in tileGroup.tiles)
+            {
+                if (tile.slot != null)
+                {
+                    tile.slot.recentlyAdded = false;
+                }
+            }
+
+            foreach (var match in matches)
+            {
+                foreach(var slot in match.slots)
+                {
+                    slot.DestroyTile();
+                }
+            }
         }
 
         public void ResetSlotColors()
